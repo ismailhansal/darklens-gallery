@@ -108,4 +108,20 @@
     @apply inline-block translate-y-[8px] opacity-0 animate-text-reveal;
     animation-delay: calc(var(--index) * 0.1s);
   }
+  
+  .animate-soft-pulse {
+    animation: soft-pulse 3s infinite ease-in-out;
+  }
+  
+  .animate-slow-spin {
+    animation: spin 20s linear infinite;
+  }
+  
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .delay-700 {
+    animation-delay: 700ms;
+  }
 }
