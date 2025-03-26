@@ -40,10 +40,10 @@ const PhotographyOrb = () => {
       img.style.borderRadius = '8px';
       img.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.8)';
       
-      // Set position
+      // Set position - convert the numeric z-index to a string
       img.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${angle * 180 / Math.PI}deg)`;
       img.style.zIndex = z < 0 ? '1' : '2';
-      img.style.opacity = 0.7 + 0.3 * (z / radius);
+      img.style.opacity = (0.7 + 0.3 * (z / radius)).toString();
       img.style.filter = `brightness(${0.7 + 0.3 * (z / radius)})`;
       
       container.appendChild(img);
@@ -64,7 +64,7 @@ const PhotographyOrb = () => {
         
         img.element.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${angle * 180 / Math.PI}deg)`;
         img.element.style.zIndex = z < 0 ? '1' : '2';
-        img.element.style.opacity = String(0.7 + 0.3 * (z / radius));
+        img.element.style.opacity = (0.7 + 0.3 * (z / radius)).toString();
         img.element.style.filter = `brightness(${0.7 + 0.3 * (z / radius)})`;
       });
       
