@@ -5,7 +5,6 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ArtisticQuote from '@/components/ArtisticQuote';
 import FuturisticCanvas from '@/components/FuturisticCanvas';
-import PhotographyOrb from '@/components/PhotographyOrb';
 
 const Index = () => {
   return (
@@ -14,7 +13,6 @@ const Index = () => {
       <Navigation />
       <Hero />
       <ArtisticQuote />
-      <PhotographyOrb />
       <FeaturedWork />
       <Footer />
     </div>

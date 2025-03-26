@@ -217,6 +217,33 @@ const Hero = () => {
               <Orbit className="w-16 h-16 text-white/20" />
             </motion.div>
             
+            {/* Profile Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="mb-8 relative mx-auto"
+            >
+              <div className="w-40 h-40 md:w-48 md:h-48 mx-auto relative">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 animate-slow-spin"></div>
+                <motion.div 
+                  className="absolute inset-1 rounded-full overflow-hidden bg-black"
+                  animate={{ rotate: [0, 5, 0] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <img 
+                    src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400" 
+                    alt="Photographer Portrait" 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                </motion.div>
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 border-2 border-black">
+                <Camera className="w-6 h-6 text-white" />
+              </div>
+            </motion.div>
+            
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
