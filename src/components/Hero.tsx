@@ -3,12 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Camera, Zap, ChevronDown, CircleOff, Orbit } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
@@ -30,7 +33,8 @@ const Hero = () => {
   
   useEffect(() => {
     // Generate particles
-    const newParticles = Array.from({ length: 50 }).map(() => ({
+    const particleCount = isMobile ? 25 : 50; // Fewer particles on mobile
+    const newParticles = Array.from({ length: particleCount }).map(() => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       size: Math.random() * 3 + 1,
@@ -61,7 +65,7 @@ const Hero = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [isMobile]);
   
   // Animate particles
   useEffect(() => {
@@ -96,14 +100,15 @@ const Hero = () => {
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
           ctx.fill();
           
-          // Connect particles if they're close
+          // Connect particles if they're close - fewer connections on mobile
+          const connectionDistance = isMobile ? 100 : 150;
           prevParticles.forEach(p2 => {
             const dx = particle.x - p2.x;
             const dy = particle.y - p2.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 150) {
-              ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - distance / 150)})`;
+            if (distance < connectionDistance) {
+              ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - distance / connectionDistance)})`;
               ctx.lineWidth = 0.5;
               ctx.beginPath();
               ctx.moveTo(particle.x, particle.y);
@@ -144,53 +149,53 @@ const Hero = () => {
       window.removeEventListener('resize', setCanvasSize);
       cancelAnimationFrame(animationId);
     };
-  }, [mousePosition]);
+  }, [mousePosition, isMobile]);
   
   return (
     <section ref={heroRef} className="relative min-h-screen overflow-hidden flex items-center justify-center">
       {/* Interactive particle background */}
       <canvas id="particle-canvas" className="absolute inset-0 z-0" />
       
-      {/* Glowing orbs */}
+      {/* Glowing orbs - smaller and repositioned on mobile */}
       <div className="absolute inset-0 z-0">
         <div 
-          className="absolute w-60 h-60 rounded-full blur-3xl"
+          className={`absolute rounded-full blur-3xl ${isMobile ? 'w-40 h-40' : 'w-60 h-60'}`}
           style={{
             background: 'radial-gradient(circle, rgba(120, 70, 190, 0.6) 0%, rgba(90, 50, 180, 0.1) 70%, transparent 100%)',
-            top: '20%',
-            right: '15%',
+            top: isMobile ? '10%' : '20%',
+            right: isMobile ? '5%' : '15%',
             transform: `translate(${mousePosition.x * -30}px, ${mousePosition.y * -30}px)`,
             transition: 'transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1)'
           }}
         />
         <div 
-          className="absolute w-80 h-80 rounded-full blur-3xl"
+          className={`absolute rounded-full blur-3xl ${isMobile ? 'w-48 h-48' : 'w-80 h-80'}`}
           style={{
             background: 'radial-gradient(circle, rgba(70, 120, 190, 0.4) 0%, rgba(50, 90, 180, 0.1) 70%, transparent 100%)',
-            bottom: '10%',
-            left: '10%',
+            bottom: isMobile ? '5%' : '10%',
+            left: isMobile ? '2%' : '10%',
             transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * 30}px)`,
             transition: 'transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1)'
           }}
         />
       </div>
       
-      {/* Futuristic grid */}
+      {/* Futuristic grid - simplified on mobile */}
       <div className="absolute inset-0 z-0 opacity-20">
-        <div className="h-full w-full grid grid-cols-12">
-          {Array.from({ length: 12 }).map((_, i) => (
+        <div className={`h-full w-full grid ${isMobile ? 'grid-cols-6' : 'grid-cols-12'}`}>
+          {Array.from({ length: isMobile ? 6 : 12 }).map((_, i) => (
             <div key={`col-${i}`} className="border-l border-white/10 h-full"></div>
           ))}
         </div>
-        <div className="h-full w-full grid grid-rows-12">
-          {Array.from({ length: 12 }).map((_, i) => (
+        <div className={`h-full w-full grid ${isMobile ? 'grid-rows-6' : 'grid-rows-12'}`}>
+          {Array.from({ length: isMobile ? 6 : 12 }).map((_, i) => (
             <div key={`row-${i}`} className="border-t border-white/10 w-full"></div>
           ))}
         </div>
       </div>
       
       {/* Main content */}
-      <div className="container max-w-screen-xl mx-auto px-6 md:px-12 z-10 relative" ref={containerRef}>
+      <div className="container max-w-screen-xl mx-auto px-4 md:px-12 z-10 relative" ref={containerRef}>
         <div className="max-w-4xl mx-auto">
           {/* Animated title */}
           <motion.div
@@ -201,9 +206,9 @@ const Hero = () => {
             }}
             className="text-center relative"
           >
-            {/* Decorative elements */}
+            {/* Decorative elements - smaller on mobile */}
             <motion.div 
-              className="absolute -top-10 left-1/2 -translate-x-1/2"
+              className={`absolute -top-10 left-1/2 -translate-x-1/2 ${isMobile ? 'scale-75' : ''}`}
               animate={{
                 y: [0, 15, 0],
                 rotate: [0, 5, 0]
@@ -217,20 +222,21 @@ const Hero = () => {
               <Orbit className="w-16 h-16 text-white/20" />
             </motion.div>
             
-            {/* Profile Image */}
+            {/* Profile Image - MEDIA LOCATION #1: Replace the image URL below */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
               className="mb-8 relative mx-auto"
             >
-              <div className="w-40 h-40 md:w-48 md:h-48 mx-auto relative">
+              <div className={`mx-auto relative ${isMobile ? 'w-32 h-32' : 'w-40 h-40 md:w-48 md:h-48'}`}>
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 animate-slow-spin"></div>
                 <motion.div 
                   className="absolute inset-1 rounded-full overflow-hidden bg-black"
                   animate={{ rotate: [0, 5, 0] }}
                   transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                 >
+                  {/* MEDIA LOCATION #1: Hero profile image */}
                   <img 
                     src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400" 
                     alt="Photographer Portrait" 
@@ -239,8 +245,8 @@ const Hero = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </motion.div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 border-2 border-black">
-                <Camera className="w-6 h-6 text-white" />
+              <div className={`absolute -bottom-2 -right-2 flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 border-2 border-black rounded-full ${isMobile ? 'w-10 h-10' : 'w-12 h-12'}`}>
+                <Camera className={`text-white ${isMobile ? 'w-5 h-5' : 'w-6 h-6'}`} />
               </div>
             </motion.div>
             
@@ -256,7 +262,7 @@ const Hero = () => {
             </motion.div>
             
             {/* Main title with letter animation */}
-            <h1 className="relative font-display font-light text-4xl md:text-6xl lg:text-7xl mb-8">
+            <h1 className="relative font-display font-light text-3xl md:text-6xl lg:text-7xl mb-6 md:mb-8 px-2">
               {Array.from("Visual Storyteller").map((letter, index) => (
                 <motion.span
                   key={index}
@@ -270,7 +276,7 @@ const Hero = () => {
                   className="inline-block"
                   style={{ 
                     textShadow: '0 0 15px rgba(255,255,255,0.3)',
-                    transform: `translateX(${mousePosition.x * (index % 5) * 10}px) translateY(${mousePosition.y * (index % 3) * 10}px)`
+                    transform: `translateX(${mousePosition.x * (index % 5) * (isMobile ? 5 : 10)}px) translateY(${mousePosition.y * (index % 3) * (isMobile ? 5 : 10)}px)`
                   }}
                 >
                   {letter === " " ? "\u00A0" : letter}
@@ -283,9 +289,9 @@ const Hero = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="relative max-w-2xl mx-auto"
+              className="relative max-w-2xl mx-auto px-4"
             >
-              <p className="text-white/60 text-lg md:text-xl mb-10 leading-relaxed">
+              <p className="text-white/60 text-base md:text-xl mb-8 md:mb-10 leading-relaxed">
                 Blending light and shadow to create moments that transcend time through the art of photography.
               </p>
               
@@ -305,16 +311,17 @@ const Hero = () => {
               </div>
             </motion.div>
             
-            {/* Floating elements */}
-            <div className="relative h-32 mt-16">
+            {/* Floating elements - smaller spacing on mobile */}
+            <div className={`relative mt-10 ${isMobile ? 'h-20' : 'h-32 mt-16'}`}>
+              {/* Only show some floating elements on non-mobile */}
               <motion.div
-                className="absolute left-1/4 top-0"
+                className={`absolute left-1/4 top-0 ${isMobile ? 'scale-75' : ''}`}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
                 style={{ 
-                  x: mousePosition.x * 30,
-                  y: mousePosition.y * 30,
+                  x: mousePosition.x * (isMobile ? 15 : 30),
+                  y: mousePosition.y * (isMobile ? 15 : 30),
                   transition: 'transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1)'
                 }}
               >
@@ -329,77 +336,81 @@ const Hero = () => {
                     ease: "easeInOut"
                   }}
                 >
-                  <Camera className="w-12 h-12 text-white/40" />
+                  <Camera className={`text-white/40 ${isMobile ? 'w-8 h-8' : 'w-12 h-12'}`} />
                 </motion.div>
               </motion.div>
               
-              <motion.div
-                className="absolute right-1/4 top-1/2"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 1 }}
-                style={{ 
-                  x: mousePosition.x * -40,
-                  y: mousePosition.y * -40,
-                  transition: 'transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1)'
-                }}
-              >
+              {!isMobile && (
                 <motion.div
-                  animate={{
-                    y: [0, 20, 0],
-                    rotate: [0, 10, 0]
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                  className="absolute right-1/4 top-1/2"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 1 }}
+                  style={{ 
+                    x: mousePosition.x * -40,
+                    y: mousePosition.y * -40,
+                    transition: 'transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1)'
                   }}
                 >
-                  <CircleOff className="w-10 h-10 text-white/30" />
+                  <motion.div
+                    animate={{
+                      y: [0, 20, 0],
+                      rotate: [0, 10, 0]
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <CircleOff className="w-10 h-10 text-white/30" />
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+              )}
               
-              <motion.div
-                className="absolute left-1/3 bottom-0"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 1.2 }}
-                style={{ 
-                  x: mousePosition.x * 20,
-                  y: mousePosition.y * 20,
-                  transition: 'transform 0.25s cubic-bezier(0.1, 0.8, 0.2, 1)'
-                }}
-              >
+              {!isMobile && (
                 <motion.div
-                  animate={{
-                    y: [0, 10, 0],
-                    rotate: [0, -8, 0]
-                  }}
-                  transition={{
-                    duration: 3.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
+                  className="absolute left-1/3 bottom-0"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 1.2 }}
+                  style={{ 
+                    x: mousePosition.x * 20,
+                    y: mousePosition.y * 20,
+                    transition: 'transform 0.25s cubic-bezier(0.1, 0.8, 0.2, 1)'
                   }}
                 >
-                  <Zap className="w-8 h-8 text-white/50" />
+                  <motion.div
+                    animate={{
+                      y: [0, 10, 0],
+                      rotate: [0, -8, 0]
+                    }}
+                    transition={{
+                      duration: 3.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Zap className="w-8 h-8 text-white/50" />
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+              )}
             </div>
             
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Stack on mobile */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1.4 }}
-              className="flex flex-col md:flex-row items-center justify-center mt-8 gap-4 md:gap-6"
+              className="flex flex-col sm:flex-row items-center justify-center mt-6 sm:mt-8 gap-4 sm:gap-6 px-4"
             >
               <Link
                 to="/portfolio"
-                className="group relative py-3 px-8 overflow-hidden z-10"
+                className="group relative py-3 px-6 sm:px-8 overflow-hidden z-10 w-full sm:w-auto text-center"
               >
                 <span className="absolute inset-0 bg-white/5 group-hover:bg-white/10 transition-colors duration-300 border border-white/20 group-hover:border-white/40"></span>
                 <span className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 w-0 group-hover:w-full transition-all duration-500 ease-out"></span>
-                <span className="relative z-10 flex items-center text-white">
+                <span className="relative z-10 flex items-center justify-center text-white">
                   Explore Work
                   <motion.span 
                     className="ml-2"
@@ -411,7 +422,7 @@ const Hero = () => {
               
               <Link
                 to="/contact"
-                className="group relative py-3 px-8 overflow-hidden z-10"
+                className="group relative py-3 px-6 sm:px-8 overflow-hidden z-10 w-full sm:w-auto text-center"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-blue-900/30 group-hover:from-purple-900/40 group-hover:to-blue-900/40 transition-colors duration-300 border border-white/10 group-hover:border-white/20"></span>
                 <span className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
