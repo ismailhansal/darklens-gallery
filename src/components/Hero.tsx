@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Sparkles, Camera, Zap, ChevronDown, CircleOff, Orbit } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import me from '../assets/me.jpg';
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -230,18 +231,18 @@ const Hero = () => {
               className="mb-8 relative mx-auto"
             >
               <div className={`mx-auto relative ${isMobile ? 'w-32 h-32' : 'w-40 h-40 md:w-48 md:h-48'}`}>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 animate-slow-spin"></div>
-                <motion.div 
+              <div className="absolute -inset-1 rounded-full bg-[#141517]"></div>
+              <motion.div 
                   className="absolute inset-1 rounded-full overflow-hidden bg-black"
                   animate={{ rotate: [0, 5, 0] }}
                   transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                 >
                   {/* MEDIA LOCATION #1: Hero profile image */}
-                  <img 
-                    src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=400" 
-                    alt="Photographer Portrait" 
-                    className="w-full h-full object-cover"
-                  />
+                <img 
+  src={me} 
+  alt="Photographer Portrait" 
+  className="w-full h-full object-cover object-top scale-125"
+/>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </motion.div>
               </div>
@@ -263,7 +264,7 @@ const Hero = () => {
             
             {/* Main title with letter animation */}
             <h1 className="relative font-display font-light text-3xl md:text-6xl lg:text-7xl mb-6 md:mb-8 px-2">
-              {Array.from("Visual Storyteller").map((letter, index) => (
+              {Array.from("Ismail Hansal").map((letter, index) => (
                 <motion.span
                   key={index}
                   initial={{ opacity: 0, y: 50 }}

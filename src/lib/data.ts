@@ -1,3 +1,7 @@
+import pizzavert from '@/assets/pizzavert.jpg'
+import portrait from '@/assets/portrait.jpg'
+import immobilier from '@/assets/immobilier.jpg'
+
 
 export interface Photo {
   id: string;
@@ -19,10 +23,10 @@ export interface Category {
 export const categories: Category[] = [
   {
     id: '1',
-    name: 'Urban',
+    name: 'Culinaire',
     slug: 'urban',
     description: 'Modern cityscapes and urban environments',
-    coverImage: 'https://images.unsplash.com/photo-1494891848038-7bd202a2afeb?q=80&w=3847',
+    coverImage: pizzavert,
     photos: [
       {
         id: 'u1',
@@ -66,10 +70,10 @@ export const categories: Category[] = [
   },
   {
     id: '2',
-    name: 'Minimalist',
+    name: 'Portraits',
     slug: 'minimalist',
     description: 'Clean, simple compositions with minimal elements',
-    coverImage: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=4846',
+    coverImage: portrait,
     photos: [
       {
         id: 'm1',
@@ -106,10 +110,10 @@ export const categories: Category[] = [
   },
   {
     id: '3',
-    name: 'Abstract',
+    name: 'Espaces & Immobilier',
     slug: 'abstract',
     description: 'Artistic compositions focusing on color, form, and texture',
-    coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=5530',
+    coverImage: immobilier,
     photos: [
       {
         id: 'a1',

@@ -206,7 +206,7 @@ const FeaturedWork = () => {
                     src={category.coverImage}
                     alt={category.name}
                     delay={index * 200}
-                    className="transform group-hover:scale-105 transition-transform duration-700"
+                    className="transform group-hover:scale-115 transition-transform duration-700 object-cover object-top"
                   />
                   <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
                 </div>
